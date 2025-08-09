@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация о книге</title>
+</head>
+<body>
+    <p th:text="${book.getName()}">Value</p>
+    <p th:text="${book.getAuthor()}"></p>
+    <p th:text="${book.getYearOfProduction()}"></p>
+    <p th:text="${book.getId()}"></p>
+
+    <br>
+
+    <a th:href="@{/books/{id}/edit (id=${book.getId()})}">Редактировать</a>
+
+    <form th:method="DELETE" th:action="@{/books/{id} (id=${book.getId()})}">
+        <input type="submit" value="Удалить">
+    </form>
+</body>
+</html>
