@@ -5,17 +5,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.apronichev.bookstore.dao.BookDao;
+import ua.apronichev.bookstore.dao.PersonDao;
 import ua.apronichev.bookstore.model.Book;
 import ua.apronichev.bookstore.model.Person;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/books")
 public class BooksController {
     BookDao bookDao;
+    PersonDao personDao;
 
     @Autowired
-    public BooksController(BookDao bookDao) {
+    public BooksController(BookDao bookDao, PersonDao personDao) {
         this.bookDao = bookDao;
+        this.personDao = personDao;
     }
 
     @GetMapping
@@ -34,8 +39,11 @@ public class BooksController {
         return "redirect:/books";
     }
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("book", bookDao.show(id));
+    public String show(@PathVariable("id") int id, @ModelAttribute("person") Person person, Model model) {
+        Book book = bookDao.show(id);
+        model.addAttribute("book", book);
+        model.addAttribute("people", personDao.index());
+        model.addAttribute("selectedPerson", personDao.show(book.getPersonId()));
         return "books/show";
     }
     @DeleteMapping("/{id}")
@@ -53,5 +61,16 @@ public class BooksController {
     public String update(@ModelAttribute("book") Book book, @PathVariable("id") int id) {
         bookDao.update(id, book);
         return "redirect:/books";
+    }
+
+    @PatchMapping("/{id}/choose")
+    public String choosePerson(@PathVariable("id")int bookId, @ModelAttribute("person") Person person) {
+        bookDao.choosePerson(bookId, person.getId());
+        return "redirect:/books/" + bookId;
+    }
+    @GetMapping("/{id}/release")
+    public String releaseBook(@PathVariable("id") int bookId) {
+        bookDao.choosePerson(bookId, null);
+        return "redirect:/books/" + bookId;
     }
 }
