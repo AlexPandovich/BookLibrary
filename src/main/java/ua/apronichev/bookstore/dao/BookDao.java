@@ -40,4 +40,7 @@ public class BookDao {
         jdbcTemplate.update("update book set person_id=? where id = ?",
                personId, bookId);
     }
+    public List<Book> getBooks(int personId) {
+        return jdbcTemplate.query("select * from book where person_id=?", new Object[] {personId}, new BookMapper());
+    }
 }
