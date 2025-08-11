@@ -14,18 +14,16 @@ public class Book {
     private String author;
     @Min(value = 0, message = "year should be greater than zero")
     private int yearOfProduction;
-    private int personId;
 
     public Book() {
 
     }
 
-    public Book(int id, String name, String author, int yearOfProduction, int personId) {
+    public Book(int id, String name, String author, int yearOfProduction) {
         this.id = id;
         this.name = name;
         this.author = author;
         this.yearOfProduction = yearOfProduction;
-        this.personId = personId;
     }
 
     public int getId() {
@@ -58,13 +56,5 @@ public class Book {
 
     public void setYearOfProduction(int yearOfProduction) {
         this.yearOfProduction = yearOfProduction;
-    }
-
-    public int getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(int personId) {
-        this.personId = personId;
     }
 }

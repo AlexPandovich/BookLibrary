@@ -13,12 +13,12 @@
     <br>
     <hr>
 
-    <div th:if="${book.getPersonId() != 0}">
-        <p th:text="'Книга сейчас у: ' +${selectedPerson.getName()}"></p>
+    <div th:if="${owner != null}">
+        <p th:text="'Книга сейчас у: ' +${owner.getName()}"></p>
         <a th:href="@{/books/{id}/release (id=${book.getId()})} ">Освободить книгу</a>
     </div>
 
-    <form th:method="PATCH" th:action="@{/books/{id}/choose (id=${book.getId()})}" th:if="${book.getPersonId() == 0}">
+    <form th:method="PATCH" th:action="@{/books/{id}/assign (id=${book.getId()})}" th:if="${owner == null}">
         <label for="person">Назначить книгу:</label>
         <select th:object="${person}" th:field="*{id}" id="person">
             <option th:each="person: ${people}" th:value="${person.getId()}" th:text="${person.getName()}"></option>

@@ -12,6 +12,7 @@ import ua.apronichev.bookstore.model.Book;
 import ua.apronichev.bookstore.model.Person;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
@@ -47,8 +48,13 @@ public class BooksController {
     public String show(@PathVariable("id") int id, @ModelAttribute("person") Person person, Model model) {
         Book book = bookDao.show(id);
         model.addAttribute("book", book);
-        model.addAttribute("people", personDao.index());
-        model.addAttribute("selectedPerson", personDao.show(book.getPersonId()));
+        Optional<Person> owner = bookDao.getPersonByBookId(id);
+
+        if(owner.isPresent()) {
+            model.addAttribute("owner", owner.get());
+        } else {
+            model.addAttribute("people", personDao.index());
+        }
         return "books/show";
     }
     @DeleteMapping("/{id}")
@@ -71,14 +77,15 @@ public class BooksController {
         return "redirect:/books";
     }
 
-    @PatchMapping("/{id}/choose")
-    public String choosePerson(@PathVariable("id")int bookId, @ModelAttribute("person") Person person) {
-        bookDao.choosePerson(bookId, person.getId());
+    @PatchMapping("/{id}/assign")
+    public String assignPerson(@PathVariable("id")int bookId, @ModelAttribute("person") Person person) {
+        bookDao.assignPerson(bookId, person.getId());
         return "redirect:/books/" + bookId;
     }
+
     @GetMapping("/{id}/release")
     public String releaseBook(@PathVariable("id") int bookId) {
-        bookDao.choosePerson(bookId, null);
+        bookDao.release(bookId);
         return "redirect:/books/" + bookId;
     }
 }

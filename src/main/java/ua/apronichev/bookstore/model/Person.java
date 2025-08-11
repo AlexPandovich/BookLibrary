@@ -10,7 +10,7 @@ public class Person {
     @NotEmpty(message = "Name should not be empty")
     @Size(min=2, max = 100, message = "Name lenght should be greater than 2 and less than 100 characters")
     private String name;
-    @Min(value = 0, message = "Year should be greater than zero")
+    @Min(value = 1900, message = "Year should be greater than 1900")
     private int yearOfBirth;
 
     public Person() {

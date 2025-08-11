@@ -14,12 +14,10 @@ import ua.apronichev.bookstore.model.Person;
 @RequestMapping("/people")
 public class PeopleController {
     private final PersonDao personDao;
-    private final BookDao bookDao;
 
     @Autowired
-    public PeopleController(PersonDao personDao, BookDao bookDao) {
+    public PeopleController(PersonDao personDao) {
         this.personDao = personDao;
-        this.bookDao = bookDao;
     }
 
     @GetMapping()
@@ -29,9 +27,9 @@ public class PeopleController {
         return "people/index";
     }
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDao.show(id));
-        model.addAttribute("books" , bookDao.getBooks(id));
+    public String show(@PathVariable("id") int personId, Model model) {
+        model.addAttribute("person", personDao.show(personId));
+        model.addAttribute("books" , personDao.getBooksByPersonId(personId));
         return "people/show";
     }
     @GetMapping("/{id}/edit")

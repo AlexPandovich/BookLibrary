@@ -4,8 +4,10 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ua.apronichev.bookstore.model.Book;
+import ua.apronichev.bookstore.model.Person;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BookDao {
@@ -36,11 +38,17 @@ public class BookDao {
         jdbcTemplate.update("update book set name=?, author=?, year=? where id = ?",
                 book.getName(), book.getAuthor(), book.getYearOfProduction(), id);
     }
-    public void choosePerson(int bookId, Integer personId) {
+    public void assignPerson(int bookId, Integer personId) {
         jdbcTemplate.update("update book set person_id=? where id = ?",
                personId, bookId);
     }
-    public List<Book> getBooks(int personId) {
-        return jdbcTemplate.query("select * from book where person_id=?", new Object[] {personId}, new BookMapper());
+
+    public void release(int bookId) {
+        jdbcTemplate.update("update book set person_id=? where id = ?",
+                null, bookId);
+    }
+    public Optional<Person> getPersonByBookId(int bookId) {
+        return jdbcTemplate.query("select person.* from book join person on book.person_id = person.id where book.id =?",
+                new Object[] {bookId}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
     }
 }
