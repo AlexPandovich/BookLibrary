@@ -1,8 +1,10 @@
 package ua.apronichev.bookstore.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.apronichev.bookstore.dao.BookDao;
 import ua.apronichev.bookstore.dao.PersonDao;
@@ -34,7 +36,10 @@ public class BooksController {
         return "books/new";
     }
     @PostMapping("")
-    public String create(@ModelAttribute("book") Book book) {
+    public String create(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+        if(bindingResult.hasErrors())
+            return "books/new";
+
         bookDao.save(book);
         return "redirect:/books";
     }
@@ -58,7 +63,10 @@ public class BooksController {
         return "books/edit";
     }
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("book") Book book, @PathVariable("id") int id) {
+    public String update(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult, @PathVariable("id") int id) {
+        if (bindingResult.hasErrors())
+            return "books/edit";
+
         bookDao.update(id, book);
         return "redirect:/books";
     }

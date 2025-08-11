@@ -1,8 +1,16 @@
 package ua.apronichev.bookstore.model;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 public class Person {
     private int id;
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min=2, max = 100, message = "Name lenght should be greater than 2 and less than 100 characters")
     private String name;
+    @Min(value = 0, message = "Year should be greater than zero")
     private int yearOfBirth;
 
     public Person() {
