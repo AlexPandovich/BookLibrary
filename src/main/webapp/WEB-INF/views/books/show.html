@@ -15,7 +15,10 @@
 
     <div th:if="${owner != null}">
         <p th:text="'Книга сейчас у: ' +${owner.getName()}"></p>
-        <a th:href="@{/books/{id}/release (id=${book.getId()})} ">Освободить книгу</a>
+
+        <form th:method="PATCH" th:action="@{/books/{id}/release (id=${book.getId()})}">
+            <input type="submit" value="освободить книгу"></input>
+        </form>
     </div>
 
     <form th:method="PATCH" th:action="@{/books/{id}/assign (id=${book.getId()})}" th:if="${owner == null}">
