@@ -6,36 +6,41 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ua.apronichev.bookstore.dao.BookDao;
-import ua.apronichev.bookstore.dao.PersonDao;
 import ua.apronichev.bookstore.model.Person;
+import ua.apronichev.bookstore.services.PeopleService;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/people")
 public class PeopleController {
-    private final PersonDao personDao;
+    private final PeopleService peopleService;
 
     @Autowired
-    public PeopleController(PersonDao personDao) {
-        this.personDao = personDao;
+    public PeopleController(PeopleService peopleService) {
+        this.peopleService = peopleService;
     }
 
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("people", personDao.index());
+        model.addAttribute("people", peopleService.findAll());
 
         return "people/index";
     }
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int personId, Model model) {
-        model.addAttribute("person", personDao.show(personId));
-        model.addAttribute("books" , personDao.getBooksByPersonId(personId));
+        Optional<Person> p = peopleService.findById(personId);
+        if (p.isPresent()) {
+            model.addAttribute("person", p.get());
+            model.addAttribute("books" , peopleService.getBooks(p.get()));
+        }
         return "people/show";
     }
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
-        Person p = personDao.show(id);
-        model.addAttribute("person", p);
+        Optional<Person> p = peopleService.findById(id);
+        if (p.isPresent())
+            model.addAttribute("person", p);
 
         return "people/edit";
     }
@@ -49,7 +54,7 @@ public class PeopleController {
         if (bindingResult.hasErrors())
             return "people/new";
 
-        personDao.save(person);
+        peopleService.save(person);
         return "redirect:/people";
     }
 
@@ -59,13 +64,13 @@ public class PeopleController {
         if(bindingResult.hasErrors())
             return "people/edit";
 
-        personDao.update(person, id);
+        peopleService.update(person, id);
         return "redirect:/people";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        personDao.delete(id);
+        peopleService.delete(id);
         return "redirect:/people";
     }
 }
