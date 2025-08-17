@@ -29,18 +29,15 @@ public class PeopleController {
     }
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int personId, Model model) {
-        Optional<Person> p = peopleService.findById(personId);
-        if (p.isPresent()) {
-            model.addAttribute("person", p.get());
-            model.addAttribute("books" , peopleService.getBooks(p.get()));
-        }
+        Optional<Person> p = peopleService.findByIdWithBooks(personId);
+        p.ifPresent(person -> model.addAttribute("person", person));
+
         return "people/show";
     }
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
         Optional<Person> p = peopleService.findById(id);
-        if (p.isPresent())
-            model.addAttribute("person", p);
+        p.ifPresent(person -> model.addAttribute("person", person));
 
         return "people/edit";
     }

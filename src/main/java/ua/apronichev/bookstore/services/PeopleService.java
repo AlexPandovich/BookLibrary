@@ -1,5 +1,6 @@
 package ua.apronichev.bookstore.services;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +26,15 @@ public class PeopleService {
     }
 
     public Optional<Person> findById(int id) {
-        return peopleRepository.findById(id);
+        return  peopleRepository.findById(id);
     }
 
-    public List<Book> getBooks(Person p) {
-        return p.getBooks();
+    public Optional<Person> findByIdWithBooks(int id) {
+        Optional<Person> optionalPerson = peopleRepository.findById(id);
+
+        optionalPerson.ifPresent(person -> Hibernate.initialize(person.getBooks()));
+
+        return optionalPerson;
     }
 
     @Transactional

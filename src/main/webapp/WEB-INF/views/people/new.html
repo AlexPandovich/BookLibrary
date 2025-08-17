@@ -5,9 +5,6 @@
     <title>Создать</title>
 </head>
 <body>
-private String name;
-private String author;
-private int yearOfProduction;
 
 <form th:method="POST" th:action="@{/people}" th:object="${person}">
     <label for="name">Имя: </label>
