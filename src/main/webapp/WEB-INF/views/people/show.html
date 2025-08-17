@@ -15,7 +15,8 @@
   <div th:if="${!person.getBooks().isEmpty()}">
       <p>Книги:</p>
       <div th:each="book : ${person.getBooks()}">
-          <p th:text="${book.getName()} + ', ' + ${book.getYearOfProduction()}"></p>
+          <p th:if="${!book.isOverdue()}" th:text="${book.getName()} + ', ' + ${book.getYearOfProduction()}"></p>
+          <p th:if="${book.isOverdue()}" style="color: red" th:text="${book.getName()} + ', ' + ${book.getYearOfProduction()}"></p>
       </div>
   </div>
 

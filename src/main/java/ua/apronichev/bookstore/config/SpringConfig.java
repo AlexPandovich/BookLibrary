@@ -31,6 +31,7 @@ import java.util.Properties;
 @ComponentScan("ua.apronichev.bookstore")
 @EnableWebMvc
 @PropertySource("classpath:hibernate.properties")
+@PropertySource("classpath:constants.properties")
 @EnableJpaRepositories("ua.apronichev.bookstore.repositories")
 @EnableTransactionManagement
 

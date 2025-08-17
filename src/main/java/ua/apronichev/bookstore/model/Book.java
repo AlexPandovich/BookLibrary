@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "book")
@@ -25,6 +29,24 @@ public class Book {
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
 
+    @Column(name = "assign_time")
+    LocalDateTime assignTime;
+
+    @Value("${overdue_days}")
+    @Transient
+    private int overdueDays;
+
+    public boolean isOverdue() {
+        boolean result = false;
+        if (assignTime != null) {
+            long days = ChronoUnit.DAYS.between(assignTime, LocalDateTime.now());
+            if(days > 10)
+                result = true;
+        }
+
+        return result;
+    }
+
     public Book() {
 
     }
@@ -36,12 +58,21 @@ public class Book {
         this.yearOfProduction = yearOfProduction;
     }
 
+    public LocalDateTime getAssignTime() {
+        return assignTime;
+    }
+
     public Person getPerson() {
         return person;
     }
 
     public void setPerson(Person person) {
         this.person = person;
+
+        if (person != null)
+            assignTime = LocalDateTime.now();
+        else
+            assignTime = null;
     }
 
     public int getId() {
