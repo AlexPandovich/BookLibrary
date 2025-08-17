@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Hello page</title>
 </head>
 <body>
     Hello book store
+    <br>
+    <a th:href="@{/people}" th:text="Читатели"></a>
+    <br>
+    <a th:href="@{/books}" th:text="Книги"></a>
+    <hr>
+    <a th:href="@{/books/search}" th:text="'Поиск книги'"></a>
 </body>
 </html>
