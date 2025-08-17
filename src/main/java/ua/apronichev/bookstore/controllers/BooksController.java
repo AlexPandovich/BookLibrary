@@ -11,6 +11,8 @@ import ua.apronichev.bookstore.model.Person;
 import ua.apronichev.bookstore.services.BooksService;
 import ua.apronichev.bookstore.services.PeopleService;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/books")
 public class BooksController {
@@ -89,5 +91,16 @@ public class BooksController {
     public String releaseBook(@PathVariable("id") int bookId) {
         booksService.releaseBook(bookId);
         return "redirect:/books/" + bookId;
+    }
+    @GetMapping("/search")
+    public String search() {
+        return "books/search";
+    }
+
+    @PostMapping("/search")
+    public String findBook(@RequestParam("searchRequest") String searchRequest, Model model) {
+        List<Book> bookList = booksService.findByNameContaining(searchRequest);
+        model.addAttribute("books", bookList);
+        return "books/search";
     }
 }

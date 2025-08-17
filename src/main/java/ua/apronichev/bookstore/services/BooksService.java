@@ -77,4 +77,8 @@ public class BooksService {
             }
         }
     }
+
+    public List<Book> findByNameContaining(String searchRequest) {
+        return  booksRepository.findByNameContainingIgnoreCase(searchRequest);
+    }
 }
