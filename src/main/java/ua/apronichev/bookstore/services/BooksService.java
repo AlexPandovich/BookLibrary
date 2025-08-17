@@ -1,5 +1,7 @@
 package ua.apronichev.bookstore.services;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.apronichev.bookstore.model.Book;
@@ -21,8 +23,9 @@ public class BooksService {
         this.peopleRepository = peopleRepository;
     }
 
-    public List<Book> findAll() {
-        return booksRepository.findAll();
+    public List<Book> findAll(int page, int size, boolean sortByYear) {
+        Sort sort = sortByYear ? Sort.by("yearOfProduction"): Sort.unsorted();
+        return booksRepository.findAll(PageRequest.of(page, size, sort)).getContent();
     }
 
     @Transactional

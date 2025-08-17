@@ -24,8 +24,12 @@ public class BooksController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("books", booksService.findAll());
+    public String index(Model model,
+            @RequestParam(required = false, defaultValue = "0",name = "page") Integer page,
+            @RequestParam(required = false, defaultValue = "#{T(java.lang.Integer).MAX_VALUE}", name = "size") Integer size,
+            @RequestParam(required = false, defaultValue = "false", name = "sort_by_year") boolean sortByYear) {
+
+        model.addAttribute("books", booksService.findAll(page, size, sortByYear));
         return "books/index";
     }
     @GetMapping("/new")
